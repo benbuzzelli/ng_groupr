@@ -1,0 +1,44 @@
+<br>
+<div class="card-custom center">
+<mat-card class="mat-form-field card-size-2">
+    <form [formGroup]="registerForm">
+        <mat-card-header class="center">
+            <mat-card-title>Register</mat-card-title>
+        </mat-card-header>
+        <!-- Input field for email -->
+        <p class="center">
+            <mat-form-field class="input-width-4" appearance="legacy">
+                <input matInput #email type="text" placeholder="Email" required [formControl]="emailFormControl"
+                [errorStateMatcher]="matcher">
+                <!-- Error displayed if a user inputs an invalid email -->
+                <mat-error>
+                    Please enter a valid email address
+                </mat-error>
+            </mat-form-field>
+        </p>
+        <!-- Input field for paasword -->
+        <p class="center">
+            <mat-form-field class="input-width-4" appearance="legacy">
+                <input matInput #password type="{{ showPassword ? 'text' : 'password' }}" class="form-control mb-2" 
+                placeholder="Password" [formControl]="passwordFormControl" [errorStateMatcher]="matcher">
+                <mat-icon class="general-icon-button" (click)="toggleShowPassword()" style="cursor: default; font-size: large;" matSuffix>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-error>
+                    Password must be 6 or more characters
+                </mat-error>
+            </mat-form-field>
+        </p>
+        <p class="center">
+            <!-- Calls the register function if clicked  -->
+            <button mat-raised-button color="primary" 
+                    type="submit" 
+                    (click)="register(email.value, password.value)">Register</button>
+        </p>
+    </form>
+</mat-card>
+</div>
+<p class="center">
+    <span class="text-option">Already have an account?</span>
+    <button class="btn-route-link" (click)="router.navigate(['login']);" style="min-width: 1%;">
+        Login
+    </button>
+</p>

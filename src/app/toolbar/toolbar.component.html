@@ -1,0 +1,7 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>groupr</span>
+      <span class="toolbar-spacer"></span>
+      <button class="btn-no-background" *ngIf="isLoggedIn()" (click)="logout('Logged out', 'Goodbye :)')">LOGOUT</button>
+    </mat-toolbar-row>
+</mat-toolbar>

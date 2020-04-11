@@ -1,0 +1,20 @@
+@import '../app.component.css';
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.btn-no-background {
+    background: transparent;
+    outline: none;
+    border: none;
+    color: white;
+}
+
+.btn-no-background:focus {
+    outline: none;
+}
+
+.btn-no-background:hover {
+    color: lightgray;
+}

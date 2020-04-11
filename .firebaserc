@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "groupr-2b60e": {
+      "hosting": {
+        "ng-groupr": [
+          "groupr-2b60e"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "groupr-2b60e"
+  }
+}

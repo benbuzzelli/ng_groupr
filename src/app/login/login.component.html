@@ -1,0 +1,40 @@
+<br>
+<div class="center card-custom">
+<mat-card class="mat-form-field card-size-2">
+    <form [formGroup]="loginForm">
+        <mat-card-header class="center">
+            <mat-card-title>Login</mat-card-title>
+        </mat-card-header>
+        <!-- Input field for email -->
+        <p class="center">
+            <mat-form-field class="input-width-4" appearance="legacy">
+                <input matInput #email type="text" class="form-control mb-2" placeholder="Email" required>
+            </mat-form-field>
+        </p>
+        <!-- Input field for password -->
+        <p class="center">
+            <mat-form-field class="input-width-4" appearance="legacy">
+                <input matInput #password type="{{ showPassword ? 'text' : 'password' }}" type="password" class="form-control mb-2" placeholder="Password" required>
+                <mat-icon class="general-icon-button" (click)="toggleShowPassword()" style="cursor: default; font-size: large;" matSuffix>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </mat-form-field>
+        </p>
+        <p class="center">
+        <!-- Calls the login function when clicked -->
+        <button mat-raised-button color="primary" 
+                type="submit" 
+                (click)="login(email.value, password.value)">Login</button>
+        </p>
+    </form>
+</mat-card>
+</div>
+<p class="center">
+    <span class="text-option">Don't have an account?</span>
+    <button class="btn-route-link" (click)="router.navigate(['register']);">
+        Register
+    </button>
+</p>
+<p class="center">
+    <button class="btn-route-link" (click)="router.navigate(['forgot-password']);">
+        Forgot Password
+    </button>
+</p>
