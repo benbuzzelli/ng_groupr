@@ -5,33 +5,76 @@
         <mat-card-header class="center">
             <mat-card-title>Register</mat-card-title>
         </mat-card-header>
+        <p class="center">
+            <mat-form-field class="input-width-2" appearance="legacy">
+                <input formControlName="first" matInput #first type="text" placeholder="First name" required 
+                [formControl]="firstNameFormControl"
+                [errorStateMatcher]="matcher">
+                <!-- Error displayed if a user inputs an invalid email -->
+                <!-- <mat-error *ngIf="nicknameFormControl.hasError('maxLength(25)')">
+                    No more than 25
+                </mat-error>
+                <mat-error *ngIf="firstNameFormControl.hasError('required')">
+                    First name is <strong>required</strong>
+                </mat-error> -->
+            </mat-form-field>
+            <mat-form-field class="input-width-3" appearance="legacy">
+                <input formControlName="last" matInput #last type="text" placeholder="Last name" required
+                [formControl]="lastNameFormControl"
+                [errorStateMatcher]="matcher">
+                <!-- <mat-error *ngIf="nicknameFormControl.hasError('maxLength(30)')"> 
+                    No mor than 30 characters
+                </mat-error>
+                <mat-error *ngIf="lastNameFormControl.hasError('required')">
+                    Last name is <strong>required</strong>
+                </mat-error> -->
+            </mat-form-field>
+        </p>
+        <p class="center">
+            <mat-form-field class="input-width-4" appearance="legacy">
+                <input formControlName="nickname" matInput #first type="text" placeholder="Nickname" [formControl]="nicknameFormControl">
+                <!-- Error displayed if a user inputs an invalid email
+                <mat-error *ngIf="nicknameFormControl.hasError('maxLength(75)')">
+                    No more than 75 characters
+                </mat-error> -->
+            </mat-form-field>
+        </p>
         <!-- Input field for email -->
         <p class="center">
             <mat-form-field class="input-width-4" appearance="legacy">
-                <input matInput #email type="text" placeholder="Email" required [formControl]="emailFormControl"
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" #email type="text" placeholder="Email" required [formControl]="emailFormControl"
                 [errorStateMatcher]="matcher">
-                <!-- Error displayed if a user inputs an invalid email -->
-                <mat-error>
+                <!-- <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
                     Please enter a valid email address
                 </mat-error>
+                <mat-error *ngIf="emailFormControl.hasError('required')">
+                    Email is <strong>required</strong>
+                </mat-error> -->
             </mat-form-field>
         </p>
         <!-- Input field for paasword -->
         <p class="center">
             <mat-form-field class="input-width-4" appearance="legacy">
-                <input matInput #password type="{{ showPassword ? 'text' : 'password' }}" class="form-control mb-2" 
-                placeholder="Password" [formControl]="passwordFormControl" [errorStateMatcher]="matcher">
+                <input formControlName="password" matInput #password type="{{ showPassword ? 'text' : 'password' }}" 
+                class="form-control mb-2" 
+                placeholder="Password" 
+                [formControl]="passwordFormControl" 
+                [errorStateMatcher]="matcher">
                 <mat-icon class="general-icon-button" (click)="toggleShowPassword()" style="cursor: default; font-size: large;" matSuffix>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                <mat-error>
+                <!-- <mat-error *ngIf="passwordFormControl.hasError('password') && !passwordFormControl.hasError('required')">
                     Password must be 6 or more characters
                 </mat-error>
+                <mat-error *ngIf="passwordFormControl.hasError('required')">
+                    Password is <strong>required</strong>
+                </mat-error> -->
             </mat-form-field>
         </p>
         <p class="center">
             <!-- Calls the register function if clicked  -->
             <button mat-raised-button color="primary" 
                     type="submit" 
-                    (click)="register(email.value, password.value)">Register</button>
+                    (click)="register()">Register</button>
         </p>
     </form>
 </mat-card>

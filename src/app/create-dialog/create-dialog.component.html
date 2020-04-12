@@ -1,0 +1,33 @@
+<div class="general-form">
+    <mat-toolbar class="center sheet-header">
+        <mat-card-header class="text-over-flow-div" style="width: 85%;">
+            <mat-card-title>Create Group</mat-card-title>
+        </mat-card-header>
+        <!-- Brings up a dialog if clicked which asks if the user wants to discard the new contact -->
+        <button id="backspaceButton" mat-icon-button (click)="openDiscardDialog();" class="general-icon-button" style="padding-bottom: 10px;">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </mat-toolbar>
+    <div>
+        <br>
+        <form [formGroup]="groupForm">
+            <div class="dialog-form">
+                <div class="center">
+                    <mat-form-field appearance="legacy" class="general-form-input">
+                        <input formControlName="name" matInput #inputField type="text" class="form-control mb-2" placeholder="Group name">
+                    </mat-form-field>
+                </div>
+                <div class="center">
+                    <mat-form-field appearance="legacy" class="general-form-input">
+                        <input formControlName="description" matInput #inputField type="text" class="form-control mb-2" placeholder="Description">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+        <div class="center">
+            <button mat-raised-button color="primary" type="submit" (click)="closeDialogAndCreateGroup()">
+                create
+            </button> 
+        </div>
+    </div>
+</div>

@@ -1,6 +1,53 @@
 <div class="center home-container">
     <mat-drawer-container class="home-drawer">
-        <mat-drawer class="left-drawer" mode="side" opened>Drawer content</mat-drawer>
-        <mat-drawer-content>Right side</mat-drawer-content>
+        <mat-drawer class="left-drawer" mode="side" opened>
+            <mat-toolbar color="primary">
+                <mat-toolbar-row>
+                    <span>Groups</span>
+                    <span class="toolbar-spacer"></span>
+                    <button id="createGroup" mat-icon-button (click)="openCreateDialog();" class="dropdown-btn general-icon-button-light" style="padding-bottom: 10px;">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </mat-toolbar-row>
+            </mat-toolbar>
+            <mat-list>
+                <mat-list-item class="list-item" *ngFor="let group of groups$ | async" (click)="changeGroup(group)">
+                    <span class="group-name">{{group.name}}</span>
+                    <span class="spacer"></span>
+                    <!-- <mat-icon>notifications</mat-icon> -->
+                </mat-list-item>
+            </mat-list>
+        </mat-drawer>
+        <mat-drawer-content>
+            <mat-toolbar color="primary" style="position: relative; top: 0px;">
+                <mat-toolbar-row>
+                    <span>{{selectedGroup.name}}</span>
+                    <span class="toolbar-spacer"></span>
+                    <button mat-icon-button (click)="getGroups()" class="dropdown-btn general-icon-button-light" style="padding-bottom: 10px;">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                    <mat-icon class="toolbar-icon">people</mat-icon>
+                    <button class="btn-no-background">INVITE</button>
+                </mat-toolbar-row>
+            </mat-toolbar>
+            <div class="message-container" #scrollMe>
+                <div>
+                    <div class="messages">
+                        <div *ngFor="let group of group$ | async">
+                            <mat-list>
+                                <mat-list-item class="list-item" *ngFor="let message of group.messages">
+                                    <span>{{message.value}}</span>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="center">
+                <div class="message-input-box">
+                    <input class="message-input" #message type="text" placeholder="Message" (keyup.enter)="addMessage(message.value)">
+                </div>
+            </div>
+        </mat-drawer-content>
     </mat-drawer-container>
 </div>

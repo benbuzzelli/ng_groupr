@@ -14,8 +14,8 @@ export class ToolbarComponent implements OnInit {
     
   }
 
-  isLoggedIn() {
-    return this.authService.isLoggedIn;
+  isVerified() {
+    return this.authService.isVerified;
   }
 
   logout(message: string, action: string) {

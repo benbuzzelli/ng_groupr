@@ -17,4 +17,9 @@
 
 .btn-no-background:hover {
     color: lightgray;
+    cursor: pointer;
+}
+
+.toolbar-icon {
+    padding-right: 10px;
 }
