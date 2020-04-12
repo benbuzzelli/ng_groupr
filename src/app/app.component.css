@@ -4,6 +4,14 @@
     justify-content: center;
 }
 
+.dialog-form {
+    width: 430px;
+}
+
+.general-form-input {
+    width: 80%;
+}
+
 .margin-auto {
     display: block;
     margin-left: auto;
@@ -61,11 +69,20 @@
 }
 
 .card-size-2 {
-    min-width: 250px;
+    width: 350px;
 }
 
 .input-width-4 {
-    width: 90%;
+    width: 315px;
+}
+
+.input-width-3 {
+    width: 150px;
+}
+
+.input-width-2 {
+    width: 150px;
+    padding-right: 15px;
 }
 
 .text-option {

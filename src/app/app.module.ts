@@ -28,6 +28,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { HomeComponent } from './home/home.component';
+import { CreateDialogComponent } from './create-dialog/create-dialog.component';
+import { DiscardDialogComponent } from './discard-dialog/discard-dialog.component';
 
 const appRoutes: Routes = [
   { path:  'login',component:  LoginComponent},
@@ -45,7 +47,9 @@ const appRoutes: Routes = [
     // ForgotPasswordComponent,
     VerifyEmailComponent,
     ToolbarComponent,
-    HomeComponent
+    HomeComponent,
+    CreateDialogComponent,
+    DiscardDialogComponent
   ],
   imports: [
     RouterModule.forRoot(
