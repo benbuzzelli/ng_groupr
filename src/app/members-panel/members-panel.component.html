@@ -1,0 +1,8 @@
+<div class="left-drawer panel-container">
+    <div class="members" *ngFor="let group of group$ | async">
+        <div class="member" *ngFor="let member of group.members">
+            <h4 class="group-name light-text-2">{{member.displayName}}</h4>
+            <span class="spacer"></span>
+        </div>
+    </div>
+</div>

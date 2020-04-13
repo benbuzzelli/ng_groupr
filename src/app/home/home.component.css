@@ -2,7 +2,8 @@
 @import '../toolbar/toolbar.component.css';
 
 .home-container {
-    height: 90%;
+    position: relative;
+    height: 80%;
 }
 
 .chat-toolbar {
@@ -67,6 +68,10 @@
 }
 
 .list-item-1 {
+    padding-left: 3%;
+}
+
+.list-item-1-1 {
     padding-left: 4%;
 }
 
@@ -84,12 +89,29 @@
     z-index: -5;
 }
 
+.message-container-1 {
+    position: absolute;
+    bottom: 100px;
+    max-height: 85%;
+    width: 75%;
+    overflow: auto;
+    z-index: -5;
+}
+
 .message-input-box {
     position: absolute;
     bottom: 40px;
-    padding-right: 15px;
+    left: 3%;
     max-height: 100px;
     width: 92%;
+}
+
+.message-input-box-1 {
+    position: absolute;
+    bottom: 40px;
+    left: 3%;
+    max-height: 100px;
+    width: 67%;
 }
 
 .message-input {

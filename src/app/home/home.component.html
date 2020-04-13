@@ -23,28 +23,30 @@
                 <mat-toolbar-row>
                     <span class="light-text-1">{{selectedGroup.name}}</span>
                     <span class="toolbar-spacer"></span>
-                    <button style="padding-left: 15px;" (click)="openInviteDialog()" class="btn-no-background general-icon-button-light">
+                    <button style="padding-left: 15px;" (click)="openInviteDialog()" class="btn-no-background">
+                        INVITE
+                    </button>
+                    <button style="padding-left: 15px;" (click)="showMembers()" class="btn-no-background general-icon-button-light">
                         <mat-icon class="toolbar-icon">people</mat-icon>
                     </button>
                 </mat-toolbar-row>
             </mat-toolbar>
-            <div class="message-container" #scrollMe>
+            <div [className]="!showMembersToggle ? 'message-container' : 'message-container-1'" #scrollMe>
                 <div class="messages">
                     <div *ngFor="let group of group$ | async">
                         <div *ngFor="let message of group.messages">
-                            <div class="list-item-1">
-                                <h3 class="light-text-1" style="display:inline;">{{message.sender}}</h3><h6 class="light-text-3 date">{{message.timestamp}}</h6>
+                            <div [className]="!showMembersToggle ? 'list-item-1' : 'list-item-1-1'">
+                                <h3 class="light-text-1" style="display:inline;">{{message.user.displayName}}</h3><h6 class="light-text-3 date">{{message.timestamp}}</h6>
                                 <span class="light-text-2 content" style="display:block; font-weight: lighter;">{{message.value}}</span>
                             </div><br>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="center">
-                <div class="message-input-box">
-                    <input class="message-input" #message type="text" placeholder="Message" (keyup.enter)="addMessage(message.value)">
-                </div>
+            <div [className]="!showMembersToggle ? 'message-input-box' : 'message-input-box-1'">
+                <input class="message-input" #message type="text" placeholder="Message" (keyup.enter)="addMessage(message.value)">
             </div>
+            <app-members-panel *ngIf="showMembersToggle"></app-members-panel>
         </mat-drawer-content>
     </mat-drawer-container>
 </div>

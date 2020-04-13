@@ -1,0 +1,27 @@
+@import '../home/home.component.css';
+
+.panel-container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    width: 25%;
+    background-color: #6139a8;
+    border-left: 1px solid #834ae7;
+    z-index: -1;
+}
+
+.members {
+    padding-top: 60px;
+}
+
+.member {
+    height: 30px;
+    padding-left: 20px;
+    line-height: 30px;
+}
+
+.member:hover {
+    background-color: #673ab7;
+    cursor: pointer;
+}

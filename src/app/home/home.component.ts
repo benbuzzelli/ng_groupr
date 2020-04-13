@@ -19,7 +19,7 @@ import { firestore } from 'firebase';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
-
+  message: string = '';
   userId: string;
   user: User = null;
   selectedGroup: Group = new Group('Groups', 'Select a group to view messages');
@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   group$: Observable<Group[]> = null;
   messages$: Observable<Message[]> = null;
   groupRef: AngularFirestoreCollection<Group> = null;
+  showMembersToggle: boolean = false;
   
   constructor(private afAuth: AngularFireAuth,
     public router: Router, 
@@ -90,12 +91,14 @@ export class HomeComponent implements OnInit {
 
   changeGroup(group) {
     this.selectedGroup = group;
+    this.groupService.selectedGroup = group;
     this.updateMessages();
     this.scrollToBottom();
   }
 
   updateMessages() {
-    this.groupRef = this.afs.collection<Group>('groups');
+    console.log(this.selectedGroup.id)
+    this.groupRef = this.afs.collection<Group>('groups', ref => ref.where("id", "==", this.selectedGroup.id));
     this.group$ = this.groupRef.snapshotChanges().pipe(map(actions => {
       return actions.map(action => {
         const data = action.payload.doc.data() as Group;
@@ -103,6 +106,7 @@ export class HomeComponent implements OnInit {
         return data;
       });
     }));
+    this.groupService.group$ = this.group$;
     this.scrollToBottom();
   }
 
@@ -112,5 +116,12 @@ export class HomeComponent implements OnInit {
     this.user = this.userService.user;
     this.messageService.addMessage(value, this.selectedGroup.id)
     this.scrollToBottom();
+    this.message = '';
+  }
+
+  showMembers() {
+    if (this.selectedGroup.owner === 'default')
+      return;
+    this.showMembersToggle = !this.showMembersToggle;
   }
 }

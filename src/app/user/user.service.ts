@@ -65,7 +65,7 @@ export class UserService {
   async createUser(first: string, last: string, nickname: string, email: string) {
     let user = new User(this.userId, first, last, nickname, email)
     this.userRef = this.afs.collection<User>('users');
-    this.userRef.add(JSON.parse(JSON.stringify(user)));
+    this.userRef.doc(this.userId).set(JSON.parse(JSON.stringify(user)));
   }
 
   joinGroup(id, dRef: MatDialogRef<CreateDialogComponent>) {
@@ -75,6 +75,7 @@ export class UserService {
         if (data.memberIDs.includes(this.userId)) {
           this.notificationService.notification$.next({message: "You're already in this group!", action: ""});
         } else {
+          this.afs.collection<Group>('groups').doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.user)))});
           this.afs.collection<Group>('groups').doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.userId)))});
           dRef.close();
         }

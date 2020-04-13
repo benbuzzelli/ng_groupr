@@ -16,6 +16,7 @@ export class Group {
   id: string;
   name: string;
   description: string;
+  members: User[];
   memberIDs: string[];
   messages: Message[];
 
@@ -24,6 +25,7 @@ export class Group {
     this.description = description;
     this.messages = [];
     this.memberIDs = [];
+    this.members = [];
   }
 }
 
@@ -34,6 +36,7 @@ export class GroupService {
   
   baseDBUrl: string;
   groupsRefs: AngularFirestoreCollection<Group>[] = [];
+  selectedGroup: Group;
   groups$: Observable<Group[]> = null;
   group$: Observable<Group[]> = null;
   groups: Group[] = [];
@@ -57,13 +60,17 @@ export class GroupService {
 
   // Sets groupRef and adds the new contact.
   createGroup(group: Group)  {
-    let uuidValue = UUID.UUID();
-    group.owner = this.userId;
-    group.memberIDs.push(this.userId);
-    this.groupsRef = this.afs.collection<Group>('groups');
-    this.groupsRef.add(JSON.parse(JSON.stringify(group)));
-    this.notificationService.notification$.next({message: group.name, action: 'Created!'});
-    // this.updateGroupIDs(uuidValue);
+    this.afs.collection<User>('users').doc(this.userId).get().toPromise().then(doc => {
+      let uuidValue = UUID.UUID();
+      group.owner = this.userId;
+      group.members.push(doc.data() as User)
+      group.memberIDs.push(this.userId);
+      group.id = uuidValue;
+      this.afs.collection<Group>('groups').doc(uuidValue).set(JSON.parse(JSON.stringify(group)));
+      // this.groupsRef.add(JSON.parse(JSON.stringify(group)));
+      this.notificationService.notification$.next({message: group.name, action: 'Created!'});
+      // this.updateGroupIDs(uuidValue);
+    })
   }
 
   updateGroupIDs(value: string) {
@@ -82,11 +89,6 @@ export class GroupService {
     this.groupsRef.doc(group.id).update(JSON.parse(JSON.stringify(group)));
     this.notificationService.notification$.next({message: group.name, action: 'Edited!'});
   }
-
-  // editUserGroupID(id: string)  {
-  //   this.userRef = this.afs.collection<User>(`groups-${this.userId}`);
-  //   this.groupsRef.doc(group.id).update(JSON.parse(JSON.stringify(group)));
-  // }
 
   getGroups(pathID) {
     let groupRef = this.afs.collection<Group>('groups', ref => ref.where("memberIDs", "array-contains", pathID));
