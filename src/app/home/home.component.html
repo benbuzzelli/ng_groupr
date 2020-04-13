@@ -1,4 +1,5 @@
-<div class="center home-container">
+<div class="home-center">
+    <div class="home-container">
     <mat-drawer-container class="home-drawer">
         <mat-drawer class="left-drawer" mode="side" opened>
             <mat-toolbar class="chat-toolbar">
@@ -35,10 +36,14 @@
                 <div class="messages">
                     <div *ngFor="let group of group$ | async">
                         <div *ngFor="let message of group.messages">
+                            <!-- <div [className]="!showMembersToggle ? 'center divider m-component' : 'center divider-1 m-component'"> -->
+                                <h5 [className]="!showMembersToggle ? 'center divider m-component light-text-3' : 'center divider-1 m-component light-text-2'">{{message | divider}}</h5>
+                            <!-- </div> -->
                             <div [className]="!showMembersToggle ? 'list-item-1' : 'list-item-1-1'">
-                                <h3 class="light-text-1" style="display:inline;">{{message.user.displayName}}</h3><h6 class="light-text-3 date">{{message.timestamp}}</h6>
+                                <h3 class="light-text-1 m-component" style="display:inline;">{{message | displayName}}</h3><h6 class="light-text-3 date m-component">{{message | displayTime}}</h6>
                                 <span class="light-text-2 content" style="display:block; font-weight: lighter;">{{message.value}}</span>
-                            </div><br>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </div>
@@ -49,4 +54,5 @@
             <app-members-panel *ngIf="showMembersToggle"></app-members-panel>
         </mat-drawer-content>
     </mat-drawer-container>
+    </div>
 </div>

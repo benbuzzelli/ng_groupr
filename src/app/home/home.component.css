@@ -1,9 +1,16 @@
 @import '../app.component.css';
 @import '../toolbar/toolbar.component.css';
 
+.home-center {
+    display: flex;
+    justify-content: center;
+    height: 90%; 
+    width: 100%;
+}
+
 .home-container {
-    position: relative;
-    height: 80%;
+    height: 90%;
+    width: 80%;
 }
 
 .chat-toolbar {
@@ -75,9 +82,26 @@
     padding-left: 4%;
 }
 
+
+.divider {
+    padding-left: 3%;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #834ae7;
+}
+
+.divider-1 {
+    padding-left: 4%;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #834ae7;
+}
+
 .list-item-1:hover {
     background-color: #7c47da;
     cursor: pointer;
+}
+
+.messages {
+    padding-top: 70px;
 }
 
 .message-container {
@@ -132,4 +156,8 @@
 
 .message-input:focus {
     outline: none;
+}
+
+.m-component:empty {
+    display: none;
 }

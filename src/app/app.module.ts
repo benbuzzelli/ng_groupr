@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthGuard } from './auth/auth.guard';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent, DisplayNamePipe, DisplayTimePipe, MessageDividerPipe } from './home/home.component';
 import { CreateDialogComponent } from './create-dialog/create-dialog.component';
 import { DiscardDialogComponent } from './discard-dialog/discard-dialog.component';
 import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
@@ -55,7 +55,10 @@ const appRoutes: Routes = [
     CreateDialogComponent,
     DiscardDialogComponent,
     InviteDialogComponent,
-    MembersPanelComponent
+    MembersPanelComponent,
+    DisplayNamePipe,
+    DisplayTimePipe,
+    MessageDividerPipe
   ],
   imports: [
     RouterModule.forRoot(

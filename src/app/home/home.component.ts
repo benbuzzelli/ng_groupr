@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, } from '@angular/core';
+import { Pipe, PipeTransform, Component, OnInit, AfterViewChecked, ElementRef, ViewChild, } from '@angular/core';
+import {  } from '@angular/common';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -11,6 +12,39 @@ import { UserService, User } from '../user/user.service';
 import { map } from 'rxjs/operators';
 import { Message, MessageService } from '../message/message.service';
 import { firestore } from 'firebase';
+
+@Pipe({
+  name: 'displayName',
+  pure: true
+})
+export class DisplayNamePipe implements PipeTransform {
+  constructor(private messageService: MessageService) { }
+  transform(message: any, args?: any): any {
+    return this.messageService.getDisplayName(message);
+  }
+}
+
+@Pipe({
+  name: 'displayTime',
+  pure: true
+})
+export class DisplayTimePipe implements PipeTransform {
+  constructor(private messageService: MessageService) { }
+  transform(message: any, args?: any): any {
+    return this.messageService.getDisplayTime(message);
+  }
+}
+
+@Pipe({
+  name: 'divider',
+  pure: true
+})
+export class MessageDividerPipe implements PipeTransform {
+  constructor(private messageService: MessageService) { }
+  transform(message: any, args?: any): any {
+    return this.messageService.getDividerString(message);
+  }
+}
 
 @Component({
   selector: 'app-home',
@@ -97,7 +131,6 @@ export class HomeComponent implements OnInit {
   }
 
   updateMessages() {
-    console.log(this.selectedGroup.id)
     this.groupRef = this.afs.collection<Group>('groups', ref => ref.where("id", "==", this.selectedGroup.id));
     this.group$ = this.groupRef.snapshotChanges().pipe(map(actions => {
       return actions.map(action => {
@@ -111,12 +144,26 @@ export class HomeComponent implements OnInit {
   }
 
   addMessage(value) {
-    if (value === '')
+    if (value === '' || this.selectedGroup.owner === 'default')
       return;
-    this.user = this.userService.user;
-    this.messageService.addMessage(value, this.selectedGroup.id)
-    this.scrollToBottom();
-    this.message = '';
+    let groupRef = this.afs.collection<Group>('groups').doc(this.selectedGroup.id);
+    groupRef.get().toPromise().then(doc => {
+        let g = doc.data() as Group;
+        let previousMessage = g.messages.pop();
+        this.user = this.userService.user;
+        let date = (previousMessage === undefined || previousMessage === null) ? null : previousMessage.date;
+        let id = (previousMessage === undefined || previousMessage === null) ? '' : previousMessage.user.id;
+        let prevTimestamp = (previousMessage === undefined || previousMessage === null) ? '' : previousMessage.timestamp;
+        this.messageService.addMessage(value, this.selectedGroup.id, date, id, prevTimestamp)
+        this.scrollToBottom();
+    });
+
+    // if (value === '')
+    //   return;
+    // this.user = this.userService.user;
+    // this.messageService.addMessage(value, this.selectedGroup.id)
+    // this.scrollToBottom();
+    // this.message = '';
   }
 
   showMembers() {
