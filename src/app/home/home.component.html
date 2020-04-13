@@ -1,9 +1,9 @@
 <div class="center home-container">
     <mat-drawer-container class="home-drawer">
         <mat-drawer class="left-drawer" mode="side" opened>
-            <mat-toolbar color="primary">
+            <mat-toolbar class="chat-toolbar">
                 <mat-toolbar-row>
-                    <span>Groups</span>
+                    <span class="light-text-1">Groups</span>
                     <span class="toolbar-spacer"></span>
                     <button id="createGroup" mat-icon-button (click)="openCreateDialog();" class="dropdown-btn general-icon-button-light" style="padding-bottom: 10px;">
                         <mat-icon>add_circle</mat-icon>
@@ -12,33 +12,33 @@
             </mat-toolbar>
             <mat-list>
                 <mat-list-item class="list-item" *ngFor="let group of groups$ | async" (click)="changeGroup(group)">
-                    <span class="group-name">{{group.name}}</span>
+                    <h3 class="group-name light-text-1">{{group.name}}</h3>
                     <span class="spacer"></span>
                     <!-- <mat-icon>notifications</mat-icon> -->
                 </mat-list-item>
             </mat-list>
         </mat-drawer>
         <mat-drawer-content>
-            <mat-toolbar color="primary" style="position: relative; top: 0px;">
+            <mat-toolbar class="chat-toolbar" style="position: relative; top: 0px;">
                 <mat-toolbar-row>
-                    <span>{{selectedGroup.name}}</span>
+                    <span class="light-text-1">{{selectedGroup.name}}</span>
                     <span class="toolbar-spacer"></span>
                     <button mat-icon-button (click)="getGroups()" class="dropdown-btn general-icon-button-light" style="padding-bottom: 10px;">
                         <mat-icon>add_circle</mat-icon>
                     </button>
-                    <mat-icon class="toolbar-icon">people</mat-icon>
-                    <button (click)="openInviteDialog()" class="btn-no-background">INVITE</button>
+                    <button style="padding-left: 15px;" (click)="openInviteDialog()" class="btn-no-background general-icon-button-light">
+                        <mat-icon class="toolbar-icon">people</mat-icon>
+                    </button>
                 </mat-toolbar-row>
             </mat-toolbar>
             <div class="message-container" #scrollMe>
-                <div>
-                    <div class="messages">
-                        <div *ngFor="let group of group$ | async">
-                            <mat-list>
-                                <mat-list-item class="list-item" *ngFor="let message of group.messages">
-                                    <span>{{message.value}}</span>
-                                </mat-list-item>
-                            </mat-list>
+                <div class="messages">
+                    <div *ngFor="let group of group$ | async">
+                        <div *ngFor="let message of group.messages">
+                            <div class="list-item-1">
+                                <h3 class="light-text-1" style="display:inline;">{{message.sender}}</h3><h6 class="light-text-3 date">{{message.timestamp}}</h6>
+                                <span class="light-text-2 content" style="display:block;">{{message.value}}</span>
+                            </div><br>
                         </div>
                     </div>
                 </div>

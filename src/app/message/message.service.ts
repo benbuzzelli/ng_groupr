@@ -21,7 +21,8 @@ export class MessageService {
   constructor() { }
 
   getMessage(sender, value) {
-    let date = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+    let date = formatDate(new Date(), 'hh:mm:ss', 'en');
+    console.log(date)
     return new Message(sender, value, date);
   }
 }

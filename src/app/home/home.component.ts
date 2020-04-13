@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { UserService, User } from '../user/user.service';
 import { map } from 'rxjs/operators';
 import { Message, MessageService } from '../message/message.service';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-home',
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedGroup.collectionID = 'default';
     this.groupService.getGroups();
     this.scrollToBottom();
   }
@@ -76,14 +78,9 @@ export class HomeComponent implements OnInit {
   }
 
   openInviteDialog() {
+    if (this.selectedGroup.collectionID === 'default')
+      return;
     let dialogRef = this.dialog.open(InviteDialogComponent, {data: this.selectedGroup.collectionID, autoFocus: false});
-    // dialogRef.afterClosed().subscribe(res => {
-    //   if (res === "discard")
-    //     this.router.navigate(['home']);
-    //   else {
-    //     document.getElementById('createGroup').blur();
-    //   }
-    // })
   }
 
   updateGroupIDs(value: string) {
@@ -109,15 +106,17 @@ export class HomeComponent implements OnInit {
   }
 
   addMessage(value) {
+    if (value === '')
+      return;
     this.user = this.userService.user;
     this.groupRef = this.afs.collection<Group>(`groups-${this.selectedGroup.collectionID}`);
     this.groupRef.get().toPromise().then((res) => {
       res.forEach(group => {
         let data = group.data() as Group;
         let messages = data.messages as Message[];
-        messages.push(this.messageService.getMessage(this.user.displayName, value));
-        data.messages = messages;
-        this.groupRef.doc(this.selectedGroup.id).update({messages: JSON.parse(JSON.stringify(messages))});
+        let message = this.messageService.getMessage(this.user.displayName, value);
+        // data.messages = messages;
+        this.groupRef.doc(this.selectedGroup.id).update({messages: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(message)))});
         this.scrollToBottom();
       });
     })
