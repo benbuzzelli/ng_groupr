@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import {formatDate} from '@angular/common';
+import { UserService } from '../user/user.service';
+import { Group } from '../group/group.service';
+import { firestore } from 'firebase';
 
 export class Message {
   sender: string;
@@ -18,11 +22,19 @@ export class Message {
 })
 export class MessageService {
 
-  constructor() { }
+  constructor(private userService: UserService,private afs: AngularFirestore) { }
 
   getMessage(sender, value) {
-    let date = formatDate(new Date(), 'hh:mm:ss', 'en');
+    let date = Date.now();
     console.log(date)
     return new Message(sender, value, date);
+  }
+
+  addMessage(value, id) {
+    if (value === '')
+      return;
+    let user = this.userService.user;
+    let message = this.getMessage(user.displayName, value);
+    this.afs.collection<Group>('groups').doc(id).update({messages: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(message)))});
   }
 }

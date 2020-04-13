@@ -12,17 +12,18 @@ import { UserService, User } from '../user/user.service';
 import { Message } from '../message/message.service';
 
 export class Group {
-  collectionID: string;
+  owner: string;
   id: string;
   name: string;
   description: string;
-  members: string[];
+  memberIDs: string[];
   messages: Message[];
 
   constructor(name: string, description: string) {
     this.name = name;
     this.description = description;
     this.messages = [];
+    this.memberIDs = [];
   }
 }
 
@@ -34,6 +35,8 @@ export class GroupService {
   baseDBUrl: string;
   groupsRefs: AngularFirestoreCollection<Group>[] = [];
   groups$: Observable<Group[]> = null;
+  group$: Observable<Group[]> = null;
+  groups: Group[] = [];
   userId: string;
 
   // Reference to the user's contact collection in Angular Firestore
@@ -55,15 +58,16 @@ export class GroupService {
   // Sets groupRef and adds the new contact.
   createGroup(group: Group)  {
     let uuidValue = UUID.UUID();
-    group.collectionID = uuidValue;
-    this.groupsRef = this.afs.collection<Group>(`groups-${uuidValue}`);
+    group.owner = this.userId;
+    group.memberIDs.push(this.userId);
+    this.groupsRef = this.afs.collection<Group>('groups');
     this.groupsRef.add(JSON.parse(JSON.stringify(group)));
     this.notificationService.notification$.next({message: group.name, action: 'Created!'});
-    this.updateGroupIDs(uuidValue);
+    // this.updateGroupIDs(uuidValue);
   }
 
   updateGroupIDs(value: string) {
-    this.userService.updateGroupIDs(value);
+    // this.userService.updateGroupIDs(value);
   }
 
   // Gets the document with the group's id and deletes it.
@@ -84,42 +88,15 @@ export class GroupService {
   //   this.groupsRef.doc(group.id).update(JSON.parse(JSON.stringify(group)));
   // }
 
-  getGroups() {
-    let doc = this.afs.collection<User>(`user-${this.userId}`);
-    doc.get().toPromise().then((res) => {
-      res.forEach(user => {
-        let data = user.data();
-        let groupIDs = data.groupIDs as string[];
-        let l = groupIDs.length;
-        let groups: Group[] = [];
-        for (let i = 0; i < l; i++) {
-          let path = 'groups-' + groupIDs[i];
-          this.groupsRefs[i] = this.afs.collection<Group>(path, ref => ref.orderBy('name'));
-          this.groupsRefs[i].get().toPromise().then((res) => {
-            res.forEach(group => {
-              let data = group.data() as Group;
-              data.id = group.id;
-              groups.push(data);
-              this.groups$ = of(groups);
-              if (this.groups$ != null && this.groups$ != undefined) {
-                this.getGroupsAlt();
-              }
-              return groups;
-            });
-          })
-        }
+  getGroups(pathID) {
+    let groupRef = this.afs.collection<Group>('groups', ref => ref.where("memberIDs", "array-contains", pathID));
+    this.groups$ = groupRef.snapshotChanges().pipe(map(actions => {
+      return actions.map(action => {
+        const data = action.payload.doc.data() as Group;
+        const id = action.payload.doc.id;
+        return { id, ...data };
       });
-    })
-    // if (this.groupsRefs != null) {
-    // this.groups$ = this.groupsRefs[0].snapshotChanges().pipe(map(actions => {
-    //     return actions.map(action => {
-    //       const data = action.payload.doc.data() as Group;
-    //       const id = action.payload.doc.id;
-    //       console.log(id);
-    //       return { id, ...data };
-    //     });
-    //   }));
-    // }
+    }));
     return this.groups$;
   }
 

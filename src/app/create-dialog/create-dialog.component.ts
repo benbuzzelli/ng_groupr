@@ -8,6 +8,7 @@ import { DiscardDialogComponent } from '../discard-dialog/discard-dialog.compone
 import { UserService, User } from '../user/user.service';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { NotificationService } from '../notification.service';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-create-dialog',
@@ -92,6 +93,11 @@ export class CreateDialogComponent implements OnInit {
           if (doc.empty) {
             this.notificationService.notification$.next({message: 'Group ID', action: 'DOES NOT EXIST!'});
           } else {
+            doc.forEach( group => {
+              let g = group.data() as Group;
+              let id = group.id;
+              groupRef.doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.userService.userId)))})
+            })
             this.afs.collection<User>(`user-${this.userService.userId}`).doc(id).update({groupIDs: groupIDs});
             this._createGroupDialogRef.close('save');
           }

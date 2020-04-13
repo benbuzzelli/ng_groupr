@@ -40,19 +40,20 @@ export class HomeComponent implements OnInit {
       if(user) {
         this.userId = user.uid
         this.userService.setUser(this.userId);
+        this.getGroups(this.userId);
       }
     })
   }
 
   ngOnInit(): void {
-    this.selectedGroup.collectionID = 'default';
-    this.groupService.getGroups();
+    this.selectedGroup.owner = 'default';
+    this.groups$ = this.groupService.groups$;
     this.scrollToBottom();
   }
 
   ngAfterViewChecked() {        
       this.scrollToBottom();        
-  } 
+  }
 
   scrollToBottom(): void {
       try {
@@ -60,8 +61,8 @@ export class HomeComponent implements OnInit {
       } catch(err) { }                 
   }
 
-  getGroups() {
-    this.groups$ = this.groupService.getGroupsAlt();
+  getGroups(id) {
+    this.groups$ = this.groupService.getGroups(id);
   }
 
   // Opens the edit dialog to give a user the option to either discard their changes,
@@ -78,13 +79,13 @@ export class HomeComponent implements OnInit {
   }
 
   openInviteDialog() {
-    if (this.selectedGroup.collectionID === 'default')
+    if (this.selectedGroup.owner === 'default')
       return;
-    let dialogRef = this.dialog.open(InviteDialogComponent, {data: this.selectedGroup.collectionID, autoFocus: false});
+    let dialogRef = this.dialog.open(InviteDialogComponent, {data: this.selectedGroup.id, autoFocus: false});
   }
 
   updateGroupIDs(value: string) {
-    this.userService.updateGroupIDs(value);
+    // this.userService.updateGroupIDs(value);
   }
 
   changeGroup(group) {
@@ -94,7 +95,7 @@ export class HomeComponent implements OnInit {
   }
 
   updateMessages() {
-    this.groupRef = this.afs.collection<Group>(`groups-${this.selectedGroup.collectionID}`);
+    this.groupRef = this.afs.collection<Group>('groups');
     this.group$ = this.groupRef.snapshotChanges().pipe(map(actions => {
       return actions.map(action => {
         const data = action.payload.doc.data() as Group;
@@ -109,17 +110,7 @@ export class HomeComponent implements OnInit {
     if (value === '')
       return;
     this.user = this.userService.user;
-    this.groupRef = this.afs.collection<Group>(`groups-${this.selectedGroup.collectionID}`);
-    this.groupRef.get().toPromise().then((res) => {
-      res.forEach(group => {
-        let data = group.data() as Group;
-        let messages = data.messages as Message[];
-        let message = this.messageService.getMessage(this.user.displayName, value);
-        // data.messages = messages;
-        this.groupRef.doc(this.selectedGroup.id).update({messages: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(message)))});
-        this.scrollToBottom();
-      });
-    })
+    this.messageService.addMessage(value, this.selectedGroup.id)
     this.scrollToBottom();
   }
 }

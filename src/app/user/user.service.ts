@@ -14,7 +14,7 @@ export class User {
   last: string;
   nickname: string;
   email: string;
-  groupIDs: string[];
+  // groupIDs: string[];
 
   constructor(id: string, first: string, last: string, nickname: string, email: string) {
     this.id = id;
@@ -24,7 +24,7 @@ export class User {
     this.fullName = this.first + " " + this.last;
     this.displayName = this.nickname == '' ? this.fullName : this.nickname;
     this.email = email;
-    this.groupIDs = [];
+    // this.groupIDs = [];
   }
 }
 
@@ -51,32 +51,31 @@ export class UserService {
   }
 
   setUser(userId) {
-    this.userRef = this.afs.collection<User>(`user-${userId}`);
+    this.userRef = this.afs.collection<User>('users', ref => ref.where("id", "==", userId));
     this.userRef.get().toPromise().then((res) => {
       res.forEach(group => {
         this.user = group.data() as User;
-        console.log(this.user)
       });
     })
   }
 
   async createUser(first: string, last: string, nickname: string, email: string) {
     let user = new User(this.userId, first, last, nickname, email)
-    this.userRef = this.afs.collection<User>(`user-${this.userId}`);
+    this.userRef = this.afs.collection<User>('users');
     this.userRef.add(JSON.parse(JSON.stringify(user)));
   }
 
-  updateGroupIDs(value: string) {
-    let doc = this.afs.collection<User>(`user-${this.userId}`);
+  // updateGroupIDs(value: string) {
+  //   let doc = this.afs.collection<User>(`user-${this.userId}`);
 
-    doc.get().toPromise().then((res) => {
-      res.forEach(user => {
-        let data = user.data();
-        let id = user.id;
-        let groupIDs = data.groupIDs === undefined ? [value] : data.groupIDs;
-        groupIDs.push(value);
-        this.afs.collection<User>(`user-${this.userId}`).doc(id).update({groupIDs: groupIDs});
-      })
-    })
-  }
+  //   doc.get().toPromise().then((res) => {
+  //     res.forEach(user => {
+  //       let data = user.data();
+  //       let id = user.id;
+  //       let groupIDs = data.groupIDs === undefined ? [value] : data.groupIDs;
+  //       groupIDs.push(value);
+  //       this.afs.collection<User>(`user-${this.userId}`).doc(id).update({groupIDs: groupIDs});
+  //     })
+  //   })
+  // }
 }
