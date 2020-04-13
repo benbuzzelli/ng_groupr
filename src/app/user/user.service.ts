@@ -75,7 +75,7 @@ export class UserService {
         if (data.memberIDs.includes(this.userId)) {
           this.notificationService.notification$.next({message: "You're already in this group!", action: ""});
         } else {
-          this.afs.collection<Group>('groups').doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.user)))});
+          this.afs.collection<Group>('groups').doc(id).update({members: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.user)))});
           this.afs.collection<Group>('groups').doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.userId)))});
           dRef.close();
         }

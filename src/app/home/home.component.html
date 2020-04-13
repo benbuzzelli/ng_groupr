@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div [className]="!showMembersToggle ? 'message-input-box' : 'message-input-box-1'">
-                <input class="message-input" #message type="text" placeholder="Message" (keyup.enter)="addMessage(message.value)">
+                <input class="message-input" #messageInput name="messageInput" type="text" placeholder="Message" (keyup.enter)="addMessage(messageInput.value); messageInput.value = ''">
             </div>
             <app-members-panel *ngIf="showMembersToggle"></app-members-panel>
         </mat-drawer-content>

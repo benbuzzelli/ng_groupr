@@ -53,7 +53,7 @@ export class MessageDividerPipe implements PipeTransform {
 })
 export class HomeComponent implements OnInit {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
-  message: string = '';
+  messageInput: string = '';
   userId: string;
   user: User = null;
   selectedGroup: Group = new Group('Groups', 'Select a group to view messages');
@@ -144,6 +144,7 @@ export class HomeComponent implements OnInit {
   }
 
   addMessage(value) {
+    this.messageInput = '';
     if (value === '' || this.selectedGroup.owner === 'default')
       return;
     let groupRef = this.afs.collection<Group>('groups').doc(this.selectedGroup.id);
