@@ -5,6 +5,9 @@ import { Router } from  "@angular/router";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { DiscardDialogComponent } from '../discard-dialog/discard-dialog.component';
+import { UserService, User } from '../user/user.service';
+import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
+import { NotificationService } from '../notification.service';
 
 @Component({
   selector: 'app-create-dialog',
@@ -12,18 +15,23 @@ import { DiscardDialogComponent } from '../discard-dialog/discard-dialog.compone
   styleUrls: ['./create-dialog.component.css']
 })
 export class CreateDialogComponent implements OnInit {
+  join: boolean = false;
+  joinGroupForm: FormGroup;
   groupForm: FormGroup;
   group: Group; 
 
   constructor(private groupService: GroupService, 
     private db: AngularFireDatabase,
+    private notificationService: NotificationService,
     public router: Router,
     public dialog: MatDialog,
+    private userService: UserService,
     private _createGroupDialogRef: MatDialogRef<CreateDialogComponent>,
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder,
+    private afs: AngularFirestore) {}
 
   ngOnInit(): void {
-    document.getElementById('backspaceButton').blur();
+    document.getElementById('backspaceButton')?.blur();
     this.initialiseForm();
   }
 
@@ -31,6 +39,9 @@ export class CreateDialogComponent implements OnInit {
     this.groupForm = this.formBuilder.group({
       name: '',
       description: ''
+    })
+    this.joinGroupForm = this.formBuilder.group({
+      groupID: ''
     })
     return this.groupForm;
   }
@@ -59,6 +70,36 @@ export class CreateDialogComponent implements OnInit {
     this._createGroupDialogRef.close('save');
   }
 
+  closeDialogAndJoinGroup() {
+    this.joinGroup();
+  }
+
+  joinGroup() {
+    this.updateGroupIDs(this.joinGroupForm.get('groupID').value);
+  }
+
+  updateGroupIDs(value: string) {
+    let doc = this.afs.collection<User>(`user-${this.userService.userId}`);
+
+    doc.get().toPromise().then((res) => {
+      res.forEach(user => {
+        let data = user.data();
+        let id = user.id;
+        let groupIDs = data.groupIDs === undefined ? [value] : data.groupIDs;
+        groupIDs.push(value);
+        let groupRef = this.afs.collection<User>(`groups-${value}`);
+        groupRef.get().toPromise().then( doc => {
+          if (doc.empty) {
+            this.notificationService.notification$.next({message: 'Group ID', action: 'DOES NOT EXIST!'});
+          } else {
+            this.afs.collection<User>(`user-${this.userService.userId}`).doc(id).update({groupIDs: groupIDs});
+            this._createGroupDialogRef.close('save');
+          }
+        });
+      })
+    })
+  }
+
   // Creates a new contact with the input values from contactForm
   createGroup() {
     let name = this.groupForm.get('name').value;
@@ -70,5 +111,9 @@ export class CreateDialogComponent implements OnInit {
   // Checks all formGroup values to see if the form is filled
   formIsChanged(): boolean {
     return this.groupForm.dirty;
+  }
+
+  toggleJoin() {
+    this.join = !this.join;
   }
 }

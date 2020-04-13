@@ -1,5 +1,5 @@
-<div class="general-form">
-    <mat-toolbar class="center sheet-header">
+<div *ngIf="!join" class="general-form">
+    <mat-toolbar class="center toolbar-style">
         <mat-card-header class="text-over-flow-div" style="width: 85%;">
             <mat-card-title>Create Group</mat-card-title>
         </mat-card-header>
@@ -28,6 +28,43 @@
             <button mat-raised-button color="primary" type="submit" (click)="closeDialogAndCreateGroup()">
                 create
             </button> 
+        </div>
+        <br>
+        <div class="center">
+            <button class="btn-route-link" (click)="toggleJoin()" style="min-width: 1%;">
+                Join Existing Group
+            </button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="join" class="general-form">
+    <mat-toolbar class="center toolbar-style">
+        <mat-card-header class="text-over-flow-div" style="width: 85%;">
+            <mat-card-title>Join Group</mat-card-title>
+        </mat-card-header>
+    </mat-toolbar>
+    <div>
+        <br>
+        <form [formGroup]="joinGroupForm">
+            <div class="dialog-form">
+                <div class="center">
+                    <mat-form-field appearance="legacy" class="general-form-input">
+                        <input formControlName="groupID" matInput type="text" class="form-control mb-2" placeholder="Group ID ">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+        <div class="center">
+            <button mat-raised-button color="primary" type="submit" (click)="closeDialogAndJoinGroup()">
+                join group
+            </button> 
+        </div>
+        <br>
+        <div class="center">
+            <button class="btn-route-link" (click)="toggleJoin()" style="min-width: 1%;">
+                Create Group
+            </button>
         </div>
     </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
+import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from  "@angular/fire/auth";
@@ -72,6 +73,17 @@ export class HomeComponent implements OnInit {
         document.getElementById('createGroup').blur();
       }
     })
+  }
+
+  openInviteDialog() {
+    let dialogRef = this.dialog.open(InviteDialogComponent, {data: this.selectedGroup.collectionID, autoFocus: false});
+    // dialogRef.afterClosed().subscribe(res => {
+    //   if (res === "discard")
+    //     this.router.navigate(['home']);
+    //   else {
+    //     document.getElementById('createGroup').blur();
+    //   }
+    // })
   }
 
   updateGroupIDs(value: string) {

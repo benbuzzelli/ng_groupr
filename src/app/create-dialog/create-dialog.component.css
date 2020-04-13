@@ -9,3 +9,7 @@
     width: 100%;
     min-width: 500px;
 }
+
+.toolbar-style {
+    background-color: transparent;
+}

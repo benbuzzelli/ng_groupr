@@ -30,6 +30,9 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { HomeComponent } from './home/home.component';
 import { CreateDialogComponent } from './create-dialog/create-dialog.component';
 import { DiscardDialogComponent } from './discard-dialog/discard-dialog.component';
+import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
+
+import { ClipboardModule } from '@angular/cdk/clipboard'
 
 const appRoutes: Routes = [
   { path:  'login',component:  LoginComponent},
@@ -49,7 +52,8 @@ const appRoutes: Routes = [
     ToolbarComponent,
     HomeComponent,
     CreateDialogComponent,
-    DiscardDialogComponent
+    DiscardDialogComponent,
+    InviteDialogComponent
   ],
   imports: [
     RouterModule.forRoot(
@@ -67,7 +71,8 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MaterialModule,
     MatIconModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ClipboardModule
   ],
   // entryComponents: [EditDialogComponent, DeleteDialogComponent, SaveChangesDialogComponent, ContactDialog, EditContactComponent],
   providers: [AuthGuard, { provide: LocationStrategy, useClass: HashLocationStrategy }],
