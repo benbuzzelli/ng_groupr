@@ -50,13 +50,13 @@
             <div class="dialog-form">
                 <div class="center">
                     <mat-form-field appearance="legacy" class="general-form-input">
-                        <input formControlName="groupID" matInput type="text" class="form-control mb-2" placeholder="Group ID ">
+                        <input #groupID formControlName="groupID" matInput type="text" class="form-control mb-2" placeholder="Group ID ">
                     </mat-form-field>
                 </div>
             </div>
         </form>
         <div class="center">
-            <button mat-raised-button color="primary" type="submit" (click)="closeDialogAndJoinGroup()">
+            <button mat-raised-button color="primary" type="submit" (click)="joinGroup(groupID.value)">
                 join group
             </button> 
         </div>

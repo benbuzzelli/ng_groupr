@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationService } from '../notification.service';
 import { AngularFireAuth } from  "@angular/fire/auth";
-import { map } from "rxjs/operators";
-import { take } from 'rxjs/operators';
+import { Group } from '../group/group.service';
+import { firestore } from 'firebase';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 
 export class User {
   id: string;
@@ -36,7 +37,9 @@ export class UserService {
   userId: string;
   userRef: AngularFirestoreCollection<User> = null;
 
-  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
+  constructor(private afAuth: AngularFireAuth, 
+    private afs: AngularFirestore,
+    private notificationService: NotificationService) {
     this.afAuth.authState.subscribe(user => {
       if(user) this.userId = user.uid
     })
@@ -65,17 +68,19 @@ export class UserService {
     this.userRef.add(JSON.parse(JSON.stringify(user)));
   }
 
-  // updateGroupIDs(value: string) {
-  //   let doc = this.afs.collection<User>(`user-${this.userId}`);
-
-  //   doc.get().toPromise().then((res) => {
-  //     res.forEach(user => {
-  //       let data = user.data();
-  //       let id = user.id;
-  //       let groupIDs = data.groupIDs === undefined ? [value] : data.groupIDs;
-  //       groupIDs.push(value);
-  //       this.afs.collection<User>(`user-${this.userId}`).doc(id).update({groupIDs: groupIDs});
-  //     })
-  //   })
-  // }
+  joinGroup(id, dRef: MatDialogRef<CreateDialogComponent>) {
+    this.afs.collection<Group>('groups').doc(id).get().toPromise().then(doc => {
+      if (doc.exists) {
+        let data = doc.data() as Group;
+        if (data.memberIDs.includes(this.userId)) {
+          this.notificationService.notification$.next({message: "You're already in this group!", action: ""});
+        } else {
+          this.afs.collection<Group>('groups').doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.userId)))});
+          dRef.close();
+        }
+      } else {
+        this.notificationService.notification$.next({message: id, action: 'INVALID!'});
+      }
+    })
+  }
 }

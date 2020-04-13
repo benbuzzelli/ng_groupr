@@ -71,39 +71,8 @@ export class CreateDialogComponent implements OnInit {
     this._createGroupDialogRef.close('save');
   }
 
-  closeDialogAndJoinGroup() {
-    this.joinGroup();
-  }
-
-  joinGroup() {
-    this.updateGroupIDs(this.joinGroupForm.get('groupID').value);
-  }
-
-  updateGroupIDs(value: string) {
-    let doc = this.afs.collection<User>(`user-${this.userService.userId}`);
-
-    doc.get().toPromise().then((res) => {
-      res.forEach(user => {
-        let data = user.data();
-        let id = user.id;
-        let groupIDs = data.groupIDs === undefined ? [value] : data.groupIDs;
-        groupIDs.push(value);
-        let groupRef = this.afs.collection<User>(`groups-${value}`);
-        groupRef.get().toPromise().then( doc => {
-          if (doc.empty) {
-            this.notificationService.notification$.next({message: 'Group ID', action: 'DOES NOT EXIST!'});
-          } else {
-            doc.forEach( group => {
-              let g = group.data() as Group;
-              let id = group.id;
-              groupRef.doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.userService.userId)))})
-            })
-            this.afs.collection<User>(`user-${this.userService.userId}`).doc(id).update({groupIDs: groupIDs});
-            this._createGroupDialogRef.close('save');
-          }
-        });
-      })
-    })
+  async joinGroup(id) {
+    this.userService.joinGroup(id, this._createGroupDialogRef);
   }
 
   // Creates a new contact with the input values from contactForm
