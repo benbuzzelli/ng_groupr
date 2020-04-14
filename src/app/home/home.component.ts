@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform, Component, OnInit, AfterViewChecked, ElementRef, ViewChild, } from '@angular/core';
 import {  } from '@angular/common';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -56,6 +57,7 @@ export class HomeComponent implements OnInit {
   messageInput: string = '';
   userId: string;
   user: User = null;
+  default: Group = new Group('Groups', 'Select a group to view messages');
   selectedGroup: Group = new Group('Groups', 'Select a group to view messages');
   groups$: Observable<Group[]> = null;
   group$: Observable<Group[]> = null;
@@ -88,6 +90,11 @@ export class HomeComponent implements OnInit {
 
   ngAfterViewChecked() {        
       this.scrollToBottom();        
+  }
+
+  resetGroup() {
+    this.selectedGroup = this.default;
+    this.selectedGroup.owner = 'default';
   }
 
   scrollToBottom(): void {
@@ -171,5 +178,20 @@ export class HomeComponent implements OnInit {
     if (this.selectedGroup.owner === 'default')
       return;
     this.showMembersToggle = !this.showMembersToggle;
+  }
+
+  editGroup() {
+
+  }
+
+  deleteGroup() {
+    let dialogRef = this.dialog.open(DeleteDialogComponent);
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === "yes") {
+        this.groupService.deleteGroup(this.selectedGroup);
+        this.resetGroup();
+      }
+    })
   }
 }

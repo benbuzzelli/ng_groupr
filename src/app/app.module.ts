@@ -33,7 +33,8 @@ import { DiscardDialogComponent } from './discard-dialog/discard-dialog.componen
 import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { MembersPanelComponent } from './members-panel/members-panel.component'
+import { MembersPanelComponent } from './members-panel/members-panel.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component'
 
 const appRoutes: Routes = [
   { path:  'login',component:  LoginComponent},
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
     MembersPanelComponent,
     DisplayNamePipe,
     DisplayTimePipe,
-    MessageDividerPipe
+    MessageDividerPipe,
+    DeleteDialogComponent
   ],
   imports: [
     RouterModule.forRoot(

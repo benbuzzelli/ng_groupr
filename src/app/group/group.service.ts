@@ -78,8 +78,8 @@ export class GroupService {
   }
 
   // Gets the document with the group's id and deletes it.
-  deleteContact(group: Group) {
-    this.groupsRef = this.afs.collection<Group>(`groups-${this.userId}`);
+  deleteGroup(group: Group) {
+    this.groupsRef = this.afs.collection<Group>('groups');
     this.groupsRef.doc(group.id).delete();
   }
 

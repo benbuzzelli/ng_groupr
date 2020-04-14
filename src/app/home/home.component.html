@@ -30,6 +30,20 @@
                     <button style="padding-left: 15px;" (click)="showMembers()" class="btn-no-background general-icon-button-light">
                         <mat-icon class="toolbar-icon">people</mat-icon>
                     </button>
+                    <button (click)="$event.stopPropagation()" 
+                            class="general-icon-button-light" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item aria-lable="Edit Contact" (click)="openEditGroup()">
+                        <mat-icon>edit</mat-icon>
+                        <span>edit</span>
+                        </button>
+                        <button mat-menu-item aria-lable="Delete Contact" (click)="deleteGroup()">
+                        <mat-icon>delete</mat-icon>
+                        <span>delete</span>
+                        </button>
+                    </mat-menu>
                 </mat-toolbar-row>
             </mat-toolbar>
             <div [className]="!showMembersToggle ? 'message-container' : 'message-container-1'" #scrollMe>
