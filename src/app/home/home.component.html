@@ -37,13 +37,16 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item aria-lable="Edit Contact" (click)="editGroup()">
-                        <mat-icon>edit</mat-icon>
-                        <span>edit</span>
+                        <button *ngIf="isOwner" mat-menu-item aria-lable="Edit Group" (click)="editGroup()">
+                            <mat-icon>edit</mat-icon>
+                            <span>edit</span>
                         </button>
-                        <button mat-menu-item aria-lable="Delete Contact" (click)="deleteGroup()">
-                        <mat-icon>delete</mat-icon>
-                        <span>delete</span>
+                        <button *ngIf="isOwner" mat-menu-item aria-lable="Delete Group" (click)="deleteGroup()">
+                            <mat-icon>delete</mat-icon>
+                            <span>delete</span>
+                        </button>
+                        <button *ngIf="!isOwner" mat-menu-item aria-lable="Leave Group" (click)="leaveGroup()">
+                            <span>leave group</span>
                         </button>
                     </mat-menu>
                 </mat-toolbar-row>

@@ -83,6 +83,12 @@ export class GroupService {
     this.groupsRef.doc(group.id).delete();
   }
 
+  leaveGroup(group) {
+    this.groupsRef = this.afs.collection<Group>('groups');
+    this.groupsRef.doc(group.id).update({memberIDs: firebase.firestore.FieldValue.arrayRemove(this.userId)});
+    this.groupsRef.doc(group.id).update({members: firebase.firestore.FieldValue.arrayRemove(this.userService.user)});
+  }
+
   // Edits contact using the doc().update method.
   editGroup(group: Group, name, description)  {
     console.log(name + " " + description)

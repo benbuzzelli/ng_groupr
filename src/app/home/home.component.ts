@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit {
   messages$: Observable<Message[]> = null;
   groupRef: AngularFirestoreCollection<Group> = null;
   showMembersToggle: boolean = false;
+  isOwner: boolean = false;
   
   constructor(private afAuth: AngularFireAuth,
     public router: Router, 
@@ -130,6 +131,13 @@ export class HomeComponent implements OnInit {
   changeGroup(group) {
     this.selectedGroup = group;
     this.groupService.selectedGroup = group;
+    if (this.selectedGroup.owner === this.userId) {
+      console.log("I am the owner!");
+      this.isOwner = true;
+    } else {
+      this.isOwner = false;
+    }
+
     this.updateMessages();
     this.scrollToBottom();
   }
@@ -139,6 +147,11 @@ export class HomeComponent implements OnInit {
     this.group$ = this.groupRef.snapshotChanges().pipe(map(actions => {
       return actions.map(action => {
         const data = action.payload.doc.data() as Group;
+        if (!data.memberIDs.includes(this.userId)) {
+          let def = new Group('Groups', 'Select a group to view messages');
+          def.owner = 'default';
+          return def;
+        }
         this.scrollToBottom();
         return data;
       });
@@ -193,5 +206,13 @@ export class HomeComponent implements OnInit {
         this.getGroups(this.userId);
       }
     })
+  }
+
+  leaveGroup() {
+    if (this.selectedGroup.owner === 'default')
+      return;
+    this.groupService.leaveGroup(this.selectedGroup);
+    this.resetGroup();
+    this.getGroups(this.userId);
   }
 }
