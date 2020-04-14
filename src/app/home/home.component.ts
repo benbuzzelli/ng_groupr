@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform, Component, OnInit, AfterViewChecked, ElementRef, ViewChild, } from '@angular/core';
 import {  } from '@angular/common';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { EditGroupComponent } from '../edit-group/edit-group.component';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -126,10 +127,6 @@ export class HomeComponent implements OnInit {
     let dialogRef = this.dialog.open(InviteDialogComponent, {data: this.selectedGroup.id, autoFocus: false});
   }
 
-  updateGroupIDs(value: string) {
-    // this.userService.updateGroupIDs(value);
-  }
-
   changeGroup(group) {
     this.selectedGroup = group;
     this.groupService.selectedGroup = group;
@@ -165,13 +162,6 @@ export class HomeComponent implements OnInit {
         this.messageService.addMessage(value, this.selectedGroup.id, date, id, prevTimestamp)
         this.scrollToBottom();
     });
-
-    // if (value === '')
-    //   return;
-    // this.user = this.userService.user;
-    // this.messageService.addMessage(value, this.selectedGroup.id)
-    // this.scrollToBottom();
-    // this.message = '';
   }
 
   showMembers() {
@@ -181,16 +171,26 @@ export class HomeComponent implements OnInit {
   }
 
   editGroup() {
-
+    if (this.selectedGroup.owner === 'default')
+      return;
+    let dialogRef = this.dialog.open(EditGroupComponent, {data: this.selectedGroup, autoFocus: false});
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === "save") {
+        this.getGroups(this.userId);
+      }
+    })
   }
 
   deleteGroup() {
+    if (this.selectedGroup.owner === 'default')
+      return;
     let dialogRef = this.dialog.open(DeleteDialogComponent);
 
     dialogRef.afterClosed().subscribe(res => {
       if (res === "yes") {
         this.groupService.deleteGroup(this.selectedGroup);
         this.resetGroup();
+        this.getGroups(this.userId);
       }
     })
   }

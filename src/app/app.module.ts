@@ -34,7 +34,8 @@ import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MembersPanelComponent } from './members-panel/members-panel.component';
-import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component'
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { EditGroupComponent } from './edit-group/edit-group.component'
 
 const appRoutes: Routes = [
   { path:  'login',component:  LoginComponent},
@@ -60,7 +61,8 @@ const appRoutes: Routes = [
     DisplayNamePipe,
     DisplayTimePipe,
     MessageDividerPipe,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    EditGroupComponent
   ],
   imports: [
     RouterModule.forRoot(

@@ -22,7 +22,9 @@
         <mat-drawer-content>
             <mat-toolbar class="chat-toolbar" style="position: relative; top: 0px;">
                 <mat-toolbar-row>
-                    <span class="light-text-1">{{selectedGroup.name}}</span>
+                    <div *ngFor="let group of group$ | async">
+                        <span class="light-text-1">{{group.name}}</span>
+                    </div>
                     <span class="toolbar-spacer"></span>
                     <button style="padding-left: 15px;" (click)="openInviteDialog()" class="btn-no-background">
                         INVITE
@@ -35,7 +37,7 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item aria-lable="Edit Contact" (click)="openEditGroup()">
+                        <button mat-menu-item aria-lable="Edit Contact" (click)="editGroup()">
                         <mat-icon>edit</mat-icon>
                         <span>edit</span>
                         </button>

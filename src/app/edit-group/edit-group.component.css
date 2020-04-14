@@ -1,0 +1,15 @@
+@import '../app.component.css';
+
+.contact-type-selector {
+    padding-right: 10px;
+    width: 20%;
+}
+
+.contact-name {
+    width: 100%;
+    min-width: 500px;
+}
+
+.toolbar-style {
+    background-color: transparent;
+}

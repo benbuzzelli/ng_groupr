@@ -84,9 +84,10 @@ export class GroupService {
   }
 
   // Edits contact using the doc().update method.
-  editGroup(group: Group)  {
-    this.groupsRef = this.afs.collection<Group>(`groups-${this.userId}`);
-    this.groupsRef.doc(group.id).update(JSON.parse(JSON.stringify(group)));
+  editGroup(group: Group, name, description)  {
+    console.log(name + " " + description)
+    this.groupsRef = this.afs.collection<Group>('groups');
+    this.groupsRef.doc(group.id).update({name: name, description: description});
     this.notificationService.notification$.next({message: group.name, action: 'Edited!'});
   }
 

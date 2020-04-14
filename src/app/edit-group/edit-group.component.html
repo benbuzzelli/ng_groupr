@@ -1,0 +1,29 @@
+<div *ngIf="!join" class="general-form">
+    <mat-toolbar class="center toolbar-style">
+        <mat-card-header class="text-over-flow-div" style="width: 85%;">
+            <mat-card-title>Edit Group</mat-card-title>
+        </mat-card-header>
+    </mat-toolbar>
+    <div>
+        <br>
+        <form [formGroup]="groupForm">
+            <div class="dialog-form">
+                <div class="center">
+                    <mat-form-field appearance="legacy" class="general-form-input">
+                        <input formControlName="name" matInput #inputField type="text" class="form-control mb-2" placeholder="Group name">
+                    </mat-form-field>
+                </div>
+                <div class="center">
+                    <mat-form-field appearance="legacy" class="general-form-input">
+                        <input formControlName="description" matInput #inputField type="text" class="form-control mb-2" placeholder="Description">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+        <div class="center">
+            <button mat-raised-button color="primary" type="submit" (click)="editGroup()">
+                save changes
+            </button> 
+        </div>
+    </div>
+</div>
