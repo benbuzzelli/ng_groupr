@@ -15,7 +15,8 @@ export class User {
   last: string;
   nickname: string;
   email: string;
-  // groupIDs: string[];
+  attendanceCount: number;
+  groupIDs: string[];
 
   constructor(id: string, first: string, last: string, nickname: string, email: string) {
     this.id = id;
@@ -25,7 +26,8 @@ export class User {
     this.fullName = this.first + " " + this.last;
     this.displayName = this.nickname == '' ? this.fullName : this.nickname;
     this.email = email;
-    // this.groupIDs = [];
+    this.attendanceCount = 0;
+    this.groupIDs = [];
   }
 }
 
@@ -76,6 +78,9 @@ export class UserService {
           this.notificationService.notification$.next({message: "You're already in this group!", action: ""});
         } else {
           this.afs.collection<Group>('groups').doc(id).update({memberIDs: firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(this.userId)))});
+          // Added this line in hopes of having a field for each user that keeps track of the groups they're in.
+          this.user.groupIDs.push(id);
+          console.log("Joined group: " + this.user.groupIDs[this.user.groupIDs.length-1]);
           dRef.close();
         }
       } else {

@@ -10,6 +10,7 @@ import { NotificationService } from '../notification.service';
 import { UUID } from 'angular2-uuid';
 import { UserService, User } from '../user/user.service';
 import { Message } from '../message/message.service';
+import { Meetings, Attendance } from '../meeting/meeting.service';
 
 export class Group {
   owner: string;
@@ -18,12 +19,14 @@ export class Group {
   description: string;
   memberIDs: string[];
   messages: Message[];
+  meetingCount: number
 
   constructor(name: string, description: string) {
     this.name = name;
     this.description = description;
     this.messages = [];
     this.memberIDs = [];
+    this.meetingCount = 0;
   }
 }
 
@@ -62,6 +65,7 @@ export class GroupService {
     group.memberIDs.push(this.userId);
     this.groupsRef = this.afs.collection<Group>('groups');
     this.groupsRef.add(JSON.parse(JSON.stringify(group)));
+    group.meetingCount = 0;
     this.notificationService.notification$.next({message: group.name, action: 'Created!'});
     // this.updateGroupIDs(uuidValue);
   }
